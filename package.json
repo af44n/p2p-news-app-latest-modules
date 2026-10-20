@@ -1,0 +1,121 @@
+{
+  "name": "p2p-news-app-workspace",
+  "version": "0.0.1",
+  "description": "A p2p-news-app worked via hypercore/hyperswarms stack",
+  "standardx": {
+    "ignore": [
+      "/node_modules/",
+      "!/lib/node_modules/**",
+      "*-bundle.js",
+      "shim.bundle.js",
+      "system.bundle.js",
+      "bundle.js",
+      "docs/"
+    ],
+    "rules": {
+      "space-before-function-paren": [
+        "error",
+        "always"
+      ],
+      "func-call-spacing": [
+        "error",
+        "never"
+      ]
+    }
+  },
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "node": true,
+      "es2021": true
+    },
+    "parserOptions": {
+      "ecmaVersion": 12,
+      "sourceType": "script"
+    },
+    "rules": {
+      "camelcase": "off",
+      "indent": [
+        "error",
+        2
+      ]
+    },
+    "ignorePatterns": [
+      "!lib/node_modules/"
+    ]
+  },
+  "bin": {
+    "p2p-news-app": "./lib/run.js"
+  },
+  "scripts": {
+    "cli": "bare lib/run.js",
+    "web": "npm run build:vault && (npm run web:ds & npm run web:system & npm run web:ui)",
+    "web:ds": "budo lib/datashell.js:shim.bundle.js --live",
+    "web:system": "budo lib/websys-ui.js:system.bundle.js --live",
+    "web:ui": "budo lib/webapp-ui.js:bundle.js --live --open",
+    "build": "npm run build:vault & npm run build:ds & npm run build:system & npm run build:ui",
+    "build:ds": "browserify lib/datashell.js > shim.bundle.js",
+    "build:system": "browserify lib/websys-ui.js > system.bundle.js",
+    "build:ui": "browserify lib/webapp-ui.js > bundle.js",
+    "relay": "node lib/node_modules/relay/index.js",
+    "resetcli": "rm -rf ./storage* && rm -rf ./.local-storage",
+    "lint": "standardx",
+    "lintfix": "standardx --fix",
+    "postinstall": "patch-package",
+    "web:news": "budo web/page.js:web/bundle.js --dir . --live --open -- -i STATE",
+    "build:news": "browserify web/page.js -i STATE -o web/bundle.js",
+    "build:vault": "node lib/build-vault.js"
+  },
+  "keywords": [
+    "p2p",
+    "blog",
+    "hypercore",
+    "datashell"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@geut/sodium-javascript-plus": "^0.0.6",
+    "@hyperswarm/dht-relay": "^0.4.3",
+    "@hyperswarm/testnet": "^3.1.4",
+    "acorn": "8.19.0",
+    "acorn-walk": "8.3.5",
+    "autobase": "^7.28.2",
+    "b4a": "^1.6.7",
+    "bare-crypto": "^1.4.5",
+    "bare-fs": "^4.8.4",
+    "bare-module": "^7.5.0",
+    "bare-path": "^3.0.0",
+    "bare-process": "^4.2.1",
+    "bare-subprocess": "^6.2.2",
+    "bip39-mnemonic": "^2.4.0",
+    "blind-pairing": "^2.3.1",
+    "blind-pairing-core": "^2.9.0",
+    "corestore": "^7.15.0",
+    "graph-explorer": "github:ddroid/graph-explorer",
+    "hyper-webrtc": "^1.0.0",
+    "hypercore-crypto": "^3.6.1",
+    "hyperdrive": "^13.3.4",
+    "hyperswarm": "^4.8.4",
+    "random-access-memory": "^6.2.1",
+    "random-access-web": "^2.0.3",
+    "sodium-javascript": "^0.8.0",
+    "sodium-universal": "^5.0.1",
+    "ws": "^8.18.1",
+    "rocksdb-native-opfs": "github:serapath/rocksdb-native-opfs#3cafa293487c43b78fdda5700f1ebac0e18b3dca",
+    "buffer": "^6.0.3",
+    "process": "^0.11.10",
+    "events": "^3.3.0",
+    "path-browserify": "^1.0.1"
+  },
+  "devDependencies": {
+    "browserify": "^17.0.0",
+    "budo": "^11.8.4",
+    "patch-package": "^8.0.0",
+    "standardx": "^7.0.0",
+    "esbuild": "^0.28.2"
+  },
+  "overrides": {
+    "mirror-drive": "1.10.0"
+  }
+}
