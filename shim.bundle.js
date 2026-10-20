@@ -416,6 +416,8 @@ function own_props (value) {
 // the vault worker drives them with messages (see index.js)
 module.exports = serve_webrtc
 
+const CHUNK = 16 * 1024 // the message size every browser accepts
+
 function serve_webrtc (worker) {
   const peers = new Map() // id -> { rtc, channel }
   const ops = { create, create_channel, send, close_channel, close, create_offer, create_answer, set_local_description, set_remote_description, add_ice_candidate }
@@ -448,7 +450,12 @@ function serve_webrtc (worker) {
     if (type === 'close') peers.delete(id)
   }
   function send_event (id, type, data, ready_state) { worker.postMessage({ type: 'rtc-event', data: { id, type, data, ready_state } }) }
-  function send (id, data) { peers.get(id)?.channel?.send(data) }
+  // one data channel message can be at most 256KB in chrome (and a big autodisk block is bigger), the channel is ordered
+  // and hyper-webrtc reads it as a byte stream, so a big write just goes out in pieces
+  function send (id, data) {
+    const channel = peers.get(id)?.channel
+    for (let i = 0; i < data.byteLength; i += CHUNK) channel?.send(data.subarray(i, i + CHUNK))
+  }
   function close_channel (id) { peers.get(id)?.channel?.close() }
   function close (id) { peers.get(id)?.rtc.close() }
   async function create_offer (id) { return plain(await peers.get(id).rtc.createOffer()) }

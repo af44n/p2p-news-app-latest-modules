@@ -41,21 +41,16 @@ opfs storage only works in a web worker, so the vault moved out of the page
 
 ## tested
 
-by hand in chrome, on localhost, 2 or 3 browser profiles and a local relay
-- seed, log in and log out
-- pairing a device, writing posts, removing a device, 3 devices
-- two peers finding and subscribing to each other and reading posts
-- uploading an avatar
-- Reset All Data and pairing again
-- browser to browser webrtc connection
+everything in the browser was tested by hand in chrome, on localhost, with 2 and 3 browser profiles and a local relay. seed, login / logout, pairing, posting, removing a device, 3 devices, two peers subscribing to each other, avatars, Reset All Data, every tab of the system bar and the browser to browser webrtc connection all work
 
-not tested yet, will be added here: the cli on these modules, the rest of the system bar tabs, firefox and safari
+not tested yet, the cli on these modules
 
 ## good to know
 
 - the Performance tab measures the worker now, chrome gives no memory numbers to workers, so some values show "unavailable"
 - chrome can keep an old `vault.bundle.js` cached, tick Disable cache in devtools while testing
 - when the relay stops, the webrtc connections close too (hyper-webrtc closes them with the relay connection, same as the main repo)
+- a webrtc data channel message can be at most 256KB in chrome, `webrtc-bridge` sends bigger writes in 16KB pieces. before that an 800KB avatar (one ~1MB autodisk block, the file is stored base64 in one entry) never reached the other device
 
 
 # Usage
@@ -71,7 +66,7 @@ But if you want to try it manually:
 
 
 Clone the repository:
-```git clone (link)```
+```git clone https://github.com/af44n/p2p-news-app-latest-modules```
 
 ## Install bare
 
