@@ -110,8 +110,7 @@
     "browserify": "^17.0.0",
     "budo": "^11.8.4",
     "patch-package": "^8.0.0",
-    "standardx": "^7.0.0",
-    "esbuild": "^0.28.2"
+    "standardx": "^7.0.0"
   },
   "overrides": {
     "mirror-drive": "1.10.0",

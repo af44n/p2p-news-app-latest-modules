@@ -34,7 +34,7 @@ this repo is the same p2p news app as [af44n/p2p-news-app](https://github.com/af
 ## the vault runs in a web worker
 
 opfs storage only works in a web worker, so the vault moved out of the page
-- `lib/vault-worker.js` runs the real vault (`identity`) and the news app, it is built into `vault.bundle.js` by `lib/build-vault.js` (esbuild, with the module swaps from rocksdb-native-opfs). `npm run build` and `npm run web` build it first
+- `lib/vault-worker.js` runs the real vault (`identity`) and the news app, it is built into `vault.bundle.js` by `lib/build-vault.js` (browserify, the module swaps from rocksdb-native-opfs are a global transform, and libsodium.js goes in unparsed cuz browserify 17 cant parse it). `npm run build` and `npm run web` build it first
 - `lib/node_modules/remote` lets the page use the vault in the worker. calls, callbacks and objects that stay in the worker (the vault bee, watchers, the swarm) work like before (`await`, `.then`, `for await`), the messages use our `make_tx` format
 - `datashell.js` starts the worker on web, the `session_*` values stay in the page (localStorage), the worker gets a copy and sends its writes (seed phrase, session) back to the page
 - what a worker doesnt have gets a stand in there, `window`, `open`, `alert` and `location.reload` (the page does those for a removed device) and `setImmediate` (hypercore 11 uses it)
