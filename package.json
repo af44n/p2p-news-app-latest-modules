@@ -75,7 +75,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@geut/sodium-javascript-plus": "^0.0.6",
     "@hyperswarm/dht-relay": "^0.4.3",
     "@hyperswarm/testnet": "^3.1.4",
     "acorn": "8.19.0",
@@ -99,8 +98,7 @@
     "hyperswarm": "^4.8.4",
     "random-access-memory": "^6.2.1",
     "random-access-web": "^2.0.3",
-    "sodium-javascript": "^0.8.0",
-    "sodium-universal": "^5.0.1",
+    "sodium-universal": "github:af44n/sodium-crypto#a9417734df70e2539385ecb4fcb66898805523b3",
     "ws": "^8.18.1",
     "rocksdb-native-opfs": "github:serapath/rocksdb-native-opfs#3cafa293487c43b78fdda5700f1ebac0e18b3dca",
     "buffer": "^6.0.3",
@@ -116,6 +114,7 @@
     "esbuild": "^0.28.2"
   },
   "overrides": {
-    "mirror-drive": "1.10.0"
+    "mirror-drive": "1.10.0",
+    "sodium-universal": "$sodium-universal"
   }
 }

@@ -15,7 +15,7 @@ this repo is the same p2p news app as [af44n/p2p-news-app](https://github.com/af
 
 - corestore 7.15.0, hypercore 11.39.0, autobase 7.28.2, hyperdrive 13.3.4, hyperbee 2.27.3, hypercore-storage 3.4.0 (rocksdb-native 3.19.1), bare-module 7.5.0
 - `mirror-drive` stays on 1.10.0 (the old override), newer ones need `rabin-native`, a native addon browsers cant run
-- the hypercore 10 patch is gone, hypercore 11 has no oplog file anymore. the dht-relay, blind-pairing and bip39-mnemonic patches stay
+- the hypercore 10 patch is gone, hypercore 11 has no oplog file anymore. the dht-relay and blind-pairing patches stay, the bip39-mnemonic patch is gone (sodium-crypto has the pbkdf2 it needed)
 
 ## storage in the browser
 
@@ -23,6 +23,13 @@ this repo is the same p2p news app as [af44n/p2p-news-app](https://github.com/af
 - opfs only works on a secure page, so open `http://localhost:9966` (or https), not the `192.168.x.x` address budo prints
 - one tab per browser profile, the storage lets only one writer open it (another browser profile is fine)
 - Reset All Data closes the swarms and the store and deletes the `identity-` folders
+
+## sodium and the relay
+
+- every `sodium-universal` in the tree is [sodium-crypto](https://github.com/serapath/sodium-crypto/pull/1) (`package.json` dependency + overrides, pinned to the commit on `af44n/sodium-crypto` till the PR is merged). in browsers it has `crypto_scalarmult_ed25519_noclamp`, the xchacha / kx stuff and the pbkdf2, so `lib/node_modules/sodium` and the `@geut/sodium-javascript-plus` extend in pairing-manager are gone
+- the browser joins through the relay with `custodial: false` (`identity-networking`, after `await sodium.ready`), so it does the noise handshake itself and the relay never gets the secret key or plaintext
+- the dht-relay patch also fixes announce signing in `custodial: false` (dht-relay 0.4.3 passed hyperdht's whole announce where it wanted the relay addresses, the encode threw and a browser that listens, like device A when pairing, was never announced). same fix as the open upstream [PR #28](https://github.com/holepunchto/hyperswarm-dht-relay/pull/28)
+- tested in chrome with 2 browser profiles and a local relay, pairing, posts from one device showing on the other and the webrtc connection all work. not tested with a cli peer, with `custodial: false` a native peer only reaches a browser if the relay is reachable over udp (public ip, udp open)
 
 ## the vault runs in a web worker
 
